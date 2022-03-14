@@ -1,0 +1,321 @@
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.luguo92.lim</groupId>
+    <artifactId>less-is-more</artifactId>
+    <version>${revision}</version>
+
+    <modules>
+        <module>lim-app</module>
+        <module>lim-framework</module>
+        <module>lim-spring-boot</module>
+    </modules>
+    <packaging>pom</packaging>
+
+    <name>Less Is More</name>
+    <description>less is more, just do it!</description>
+
+    <developers>
+        <developer>
+            <id>lim</id>
+            <name>lug92</name>
+            <email>1791937679@qq.com</email>
+            <url>https://mrfun.fun/</url>
+        </developer>
+    </developers>
+
+    <properties>
+        <revision>1.0.0</revision>
+
+        <!-- Maven plugins -->
+        <maven_jar_version>3.2.0</maven_jar_version>
+        <maven_surefire_version>3.0.0-M5</maven_surefire_version>
+        <maven_failsafe_version>3.0.0-M5</maven_failsafe_version>
+        <maven_deploy_version>2.8.2</maven_deploy_version>
+        <maven_compiler_version>3.8.1</maven_compiler_version>
+        <maven_source_version>3.2.1</maven_source_version>
+        <maven_javadoc_version>3.2.0</maven_javadoc_version>
+        <maven_jetty_version>9.4.38.v20210224</maven_jetty_version>
+        <maven_checkstyle_version>3.1.2</maven_checkstyle_version>
+        <maven_jacoco_version>0.8.6</maven_jacoco_version>
+        <maven_flatten_version>1.2.5</maven_flatten_version>
+        <maven_enforce_version>3.0.0-M3</maven_enforce_version>
+        <apache-rat-plugin.version>0.13</apache-rat-plugin.version>
+
+    </properties>
+
+    <dependencies>
+
+    </dependencies>
+
+    <build>
+
+        <plugins>
+            <plugin>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>${maven_jar_version}</version>
+                <configuration>
+                    <archive>
+                        <addMavenDescriptor>true</addMavenDescriptor>
+                        <index>true</index>
+                        <manifest>
+                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                        </manifest>
+                        <manifestEntries>
+                            <Specification-Version>${project.version}</Specification-Version>
+                            <Implementation-Version>${project.version}</Implementation-Version>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <useSystemClassLoader>true</useSystemClassLoader>
+                    <forkMode>once</forkMode>
+                    <argLine>${argline} ${jacocoArgLine}</argLine>
+                    <systemProperties>
+                        <!-- common shared -->
+                    </systemProperties>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>${maven_deploy_version}</version>
+                <configuration>
+                    <skip>${skip_maven_deploy}</skip>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven_compiler_version}</version>
+                <configuration>
+                    <compilerArgs>
+                        <compilerArg>-proc:none</compilerArg>
+                        <compilerArg>-parameters</compilerArg>
+                    </compilerArgs>
+                    <fork>true</fork>
+                    <source>${java_source_version}</source>
+                    <target>${java_target_version}</target>
+                    <encoding>${file_encoding}</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${maven_jacoco_version}</version>
+                <executions>
+                    <execution>
+                        <id>jacoco-initialize</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                        <configuration>
+                            <propertyName>jacocoArgLine</propertyName>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>report-aggregate</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>report-aggregate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.rat</groupId>
+                <artifactId>apache-rat-plugin</artifactId>
+                <version>${apache-rat-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>verify.rat</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                        <configuration>
+                            <excludes>
+                                <exclude>**/*.versionsBackup</exclude>
+                                <exclude>**/.idea/</exclude>
+                                <exclude>**/.mvn/</exclude>
+                                <exclude>**/*.iml</exclude>
+                                <exclude>**/*.txt</exclude>
+                                <exclude>**/*.load</exclude>
+                                <exclude>**/*.flex</exclude>
+                                <exclude>**/*.fc</exclude>
+                                <exclude>**/*.sh</exclude>
+                                <exclude>**/*.bat</exclude>
+                                <exclude>**/*.md</exclude>
+                                <exclude>**/*.properties</exclude>
+                                <exclude>.git/</exclude>
+                                <exclude>.gitignore</exclude>
+                                <!-- ASF jenkins box puts the Maven repo in our root directory. -->
+                                <exclude>.repository/</exclude>
+                                <exclude>**/.settings/*</exclude>
+                                <exclude>**/.classpath</exclude>
+                                <exclude>**/.project</exclude>
+                                <exclude>**/target/**</exclude>
+                                <exclude>**/*.log</exclude>
+                                <exclude>CODE_OF_CONDUCT.md</exclude>
+                                <exclude>.codecov.yml</exclude>
+                                <exclude>.travis.yml</exclude>
+                                <exclude>PULL_REQUEST_TEMPLATE.md</exclude>
+                                <exclude>CONTRIBUTING.md</exclude>
+                                <exclude>README.md</exclude>
+                                <exclude>Jenkinsfile</exclude>
+                                <exclude>**/codestyle/*</exclude>
+                                <exclude>**/resources/META-INF/**</exclude>
+                                <!-- exclude the netty files -->
+                                <exclude>**/org/apache/dubbo/common/threadlocal/InternalThreadLocal.java</exclude>
+                                <exclude>**/org/apache/dubbo/common/threadlocal/InternalThreadLocalMap.java</exclude>
+                                <exclude>**/org/apache/dubbo/common/timer/TimerTask.java</exclude>
+                                <exclude>**/org/apache/dubbo/common/timer/Timer.java</exclude>
+                                <exclude>**/org/apache/dubbo/common/timer/Timeout.java</exclude>
+                                <exclude>**/org/apache/dubbo/common/timer/HashedWheelTimer.java</exclude>
+                                <!-- exclude the edazdarevic files -->
+                                <exclude>**/org/apache/dubbo/common/utils/CIDRUtils.java</exclude>
+                                <!-- exclude protobuf generated files -->
+                                <exclude>**/org/apache/dubbo/common/serialize/protobuf/support/wrapper/MapValue.java
+                                </exclude>
+                                <exclude>
+                                    **/org/apache/dubbo/common/serialize/protobuf/support/wrapper/ThrowablePB.java
+                                </exclude>
+                                <exclude>
+                                    **/org/apache/dubbo/common/utils/Utf8Utils.java
+                                </exclude>
+                                <exclude>.github/**</exclude>
+                                <exclude>compiler/**</exclude>
+                                <!-- exclude mockito extensions spi files -->
+                                <exclude>**/mockito-extensions/*</exclude>
+                            </excludes>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>3.0.0-M1</version>
+                <configuration>
+                    <autoVersionSubmodules>true</autoVersionSubmodules>
+                    <useReleaseProfile>false</useReleaseProfile>
+                    <releaseProfiles>release</releaseProfiles>
+                    <goals>deploy</goals>
+                    <arguments>${arguments}</arguments>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>flatten-maven-plugin</artifactId>
+                <version>${maven_flatten_version}</version>
+                <configuration>
+                    <updatePomFile>true</updatePomFile>
+                    <flattenMode>resolveCiFriendliesOnly</flattenMode>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>flatten</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>flatten</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>flatten.clean</id>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+
+        <pluginManagement>
+            <plugins>
+                <!-- keep surefire and failsafe in sync -->
+                <plugin>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>${maven_surefire_version}</version>
+                    <configuration>
+                        <!-- Activate the use of TCP to transmit events to the plugin to fix Corrupted STDOUT issue -->
+                        <forkNode implementation="org.apache.maven.plugin.surefire.extensions.SurefireForkNodeFactory"/>
+                    </configuration>
+                </plugin>
+                <!-- keep surefire and failsafe in sync -->
+                <plugin>
+                    <artifactId>maven-failsafe-plugin</artifactId>
+                    <version>${maven_failsafe_version}</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-clean-plugin</artifactId>
+                    <version>3.1.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.ops4j.pax.exam</groupId>
+                    <artifactId>maven-paxexam-plugin</artifactId>
+                    <version>1.2.4</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <version>3.1.2</version>
+                </plugin>
+                <plugin>
+                    <!-- Do NOT upgrade -->
+                    <artifactId>maven-jxr-plugin</artifactId>
+                    <version>2.2</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>build-helper-maven-plugin</artifactId>
+                    <version>3.2.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.fusesource.hawtjni</groupId>
+                    <artifactId>maven-hawtjni-plugin</artifactId>
+                    <version>1.15</version>
+                </plugin>
+                <plugin>
+                    <groupId>kr.motd.maven</groupId>
+                    <artifactId>exec-maven-plugin</artifactId>
+                    <version>1.0.0.Final</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-shade-plugin</artifactId>
+                    <version>3.2.4</version>
+                    <configuration>
+                        <createDependencyReducedPom>false</createDependencyReducedPom>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.eclipse.jetty</groupId>
+                    <artifactId>jetty-maven-plugin</artifactId>
+                    <version>${maven_jetty_version}</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+</project>

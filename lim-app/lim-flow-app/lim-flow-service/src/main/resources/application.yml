@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: less-is-more
+
+log:
+  path: logs
